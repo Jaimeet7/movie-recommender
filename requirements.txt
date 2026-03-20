@@ -1,6 +1,7 @@
-scikit-learn
-pandas
-sentence-transformers
-transformers
-streamlit
-spacy
+pandas>=2.0
+scikit-learn>=1.3
+sentence-transformers>=2.7
+spacy>=3.7
+streamlit>=1.35.0
+python-dotenv>=1.0
+altair>=5.0
