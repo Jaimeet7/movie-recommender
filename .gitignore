@@ -4,4 +4,4 @@ __pycache__/
 data/
 *.csv
 venv/
-.venv/
+.venv/.DS_Store
