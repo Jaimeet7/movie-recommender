@@ -1,8 +1,5 @@
 import spacy
 import re
-import pandas as pd
-
-df = pd.read_csv("/Users/jaimeet/Documents/Movie Recommender/data/netflix_cleaned.csv")
 
 nlp = spacy.load("en_core_web_lg")
 
