@@ -1,5 +1,8 @@
 import spacy
 import re
+import pandas as pd
+
+df = pd.read_csv("/Users/jaimeet/Documents/Movie Recommender/data/netflix_cleaned.csv")
 
 nlp = spacy.load("en_core_web_lg")
 
@@ -22,7 +25,17 @@ genre_map = {
 }
 
 def check_name_in_query(query,df,filters):
-    words = [word for word in query.lower().split() if len(word)>2]
+
+    skip_words = set()
+    for variants in nationality_map.values():
+        skip_words.update(variants)
+    for variants in genre_map.values():
+        skip_words.update(variants)
+    skip_words.update(['movie', 'movies', 'film', 'series', 'show', 'suggest', 
+                   'recommend', 'watch', 'with', 'like', 'the', 'and'])
+
+
+    words = [word for word in query.lower().split() if len(word)>2 and word not in skip_words]
 
     for n in range(len(words),0,-1):
         for i in range(len(words)-n+1):
@@ -62,9 +75,9 @@ def parse_query(query,df):
             filters['country'] = country
             break
 
-    check_name_in_query(query,df,filters)
-
     ner_filter(query,filters)
+
+    check_name_in_query(query,df,filters)
     
     return filters
 
@@ -107,3 +120,7 @@ def get_genre(query):
         for w in word:
             if w in query:
                 return genre
+            
+print(parse_query("Suggest an Indian Thriller series",df))
+print(parse_query("Suggest a k drama",df))
+
