@@ -117,7 +117,3 @@ def get_genre(query):
         for w in word:
             if w in query:
                 return genre
-            
-print(parse_query("Suggest an Indian Thriller series",df))
-print(parse_query("Suggest a k drama",df))
-
