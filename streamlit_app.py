@@ -84,7 +84,7 @@ def main():
                         ref_movie_embedding, df_no_ref, embedded_no_ref, top_k=top_k
                     )
             else:
-                filters = parse_query(prompt)
+                filters = parse_query(prompt,df)
                 filtered_df = apply_filters(df, filters)
 
                 if filtered_df.empty:

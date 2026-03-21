@@ -17,8 +17,16 @@ generic_queries = [
     "any movie",
     "something to watch"
 ]
+
+# all_names = set()
+# for col in ['cast','director']:
+#     df[col].dropna().str.split(',').explode().str.strip().str.lower().apply(all_names.add)
+
+# print([name for name in all_names if 'nolan' in name])
+
 def keyword_search(df,query,embedded_df):
-    filters = parse_query(query)
+    filters = parse_query(query,df)
+    print(filters)
     filled = [v for v in filters.values() if v is not None]
     if len(filled)<2:
         print("Please provide a more descriptive query")

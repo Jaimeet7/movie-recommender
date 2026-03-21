@@ -1,5 +1,6 @@
 import spacy
 import re
+
 nlp = spacy.load("en_core_web_lg")
 
 nationality_map = {
@@ -17,10 +18,26 @@ genre_map = {
     "thriller": ["thriller","suspense", "suspenseful"],
     "sci-fi": ["sci-fi","space", "science fiction", "sci fi"],
     "action": ["action","action packed"],
-    "drama": ["drama","emotional", "sad","k"]
+    "drama": ["drama","emotional", "sad"]
 }
 
-def parse_query(query):
+def check_name_in_query(query,df,filters):
+    words = [word for word in query.lower().split() if len(word)>2]
+
+    for n in range(len(words),0,-1):
+        for i in range(len(words)-n+1):
+            phrase = ' '.join(words[i:i+n])
+            director_match = df[df['director'].str.contains(phrase,case=False,na=False)]
+            if not director_match.empty:
+                filters['name'] = phrase
+                return filters
+            cast_match = df[df['cast'].str.contains(phrase,case=False,na=False)]
+            if not cast_match.empty:
+                filters['name'] = phrase
+                return filters
+    return filters
+
+def parse_query(query,df):
 
     filters = {
         "type" : None,
@@ -45,6 +62,8 @@ def parse_query(query):
             filters['country'] = country
             break
 
+    check_name_in_query(query,df,filters)
+
     ner_filter(query,filters)
     
     return filters
@@ -54,16 +73,15 @@ def ner_filter(query,filters):
     doc = nlp(query.title())
     
     for ent in doc.ents:
-        if ent.label_ == "PERSON":
-            filters['name'] = ent.text.lower()
-        elif ent.label_ == "GPE":
+        if ent.label_ == "GPE":
             filters['country'] = ent.text
         elif ent.label_ == 'NORP':
             country = get_country(ent.text)
             if country:
-                filters['country'] = get_country(country)
+                filters['country'] = country
     return filters
 
+# print(ner_filter("Suggest a nolan movie",d))
 
 def get_country(word):
     word = word.lower()
@@ -80,7 +98,6 @@ def reference_movie(query):
 
     if match:
         movie = match.group(1).strip()
-        print(match.group().strip())
         return movie
     return None
 
