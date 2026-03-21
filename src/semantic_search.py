@@ -1,9 +1,14 @@
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from dotenv import load_dotenv
+import os
 from src.data_loader import load_data
 
-df = load_data("/Users/jaimeet/Documents/Movie Recommender/data/netflix_cleaned.csv")
+datapath = os.getenv("DATA_PATH")
+
+df = load_data(datapath)
+
 
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 print("model loaded successfully")
