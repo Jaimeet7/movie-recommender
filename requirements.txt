@@ -9,3 +9,5 @@ en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_
 langchain==1.2.13
 langchain-core==1.2.20
 langchain-google-genai==4.2.1
+pydantic==2.12.5
+pydantic_core==2.41.5
