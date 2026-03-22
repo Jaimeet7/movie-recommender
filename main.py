@@ -2,6 +2,7 @@ from src.parse import parse_query,reference_movie
 from src.search import apply_filters
 from src.semantic_search import create_embeddings,similarity_search
 from src.data_loader import load_data
+from src.llm_parser import parse_query_llm,chain
 import pandas as pd
 from dotenv import load_dotenv
 import os
@@ -18,15 +19,13 @@ generic_queries = [
     "something to watch"
 ]
 
-# all_names = set()
-# for col in ['cast','director']:
-#     df[col].dropna().str.split(',').explode().str.strip().str.lower().apply(all_names.add)
-
-# print([name for name in all_names if 'nolan' in name])
-
 def keyword_search(df,query,embedded_df):
-    filters = parse_query(query,df)
-    print(filters)
+    choice = input("Since this is a project to display both LLM parser plus a Manual Parser please choose which would u prefer\n1.LLM parser\n2.Manual Parse\n")
+    match choice:
+        case '1': 
+            filters = parse_query_llm(query,chain)
+        case '2':
+            filters = parse_query(query,df)
     filled = [v for v in filters.values() if v is not None]
     if len(filled)<2:
         print("Please provide a more descriptive query")

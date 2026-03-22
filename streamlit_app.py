@@ -5,6 +5,7 @@ from src.parse import parse_query, reference_movie
 from src.search import apply_filters
 from src.semantic_search import create_embeddings, similarity_search
 from src.data_loader import load_data
+from src.llm_parser import parse_query_llm,chain
 
 import os
 from dotenv import load_dotenv
@@ -42,6 +43,7 @@ def main():
         st.markdown("---")
         st.caption("Type things like:")
         st.code("Suggest a Nolan movie\nIndian thriller series\nHorror movies with American cast")
+        parser_choice = st.radio("Parser",["LLM Parser","Manual Parser"])
 
     df, embedded_df = load_model_and_data(datapath)
 
@@ -84,7 +86,10 @@ def main():
                         ref_movie_embedding, df_no_ref, embedded_no_ref, top_k=top_k
                     )
             else:
-                filters = parse_query(prompt,df)
+                if parser_choice == "LLM Parser":
+                    filters = parse_query_llm(prompt,chain)
+                else:
+                    filters = parse_query(prompt,df)
                 filtered_df = apply_filters(df, filters)
 
                 if filtered_df.empty:
